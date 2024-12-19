@@ -1,8 +1,11 @@
+#include <math.h>
 #include "simulator.h"
 
-Simulator::Simulator() {
-    _window = new sf::RenderWindow(sf::VideoMode(1200, 1200), "Robot Simulator");
-    _window->setFramerateLimit(120);
+const double PI = atan(1) * 4;
+
+Simulator::Simulator(Robot& robot) : _robot(robot) {
+    _window = new sf::RenderWindow(sf::VideoMode(FIELD_SIZE, FIELD_SIZE), "Robot Simulator");
+    _window->setFramerateLimit(FPS);
 }
 
 Simulator::~Simulator() {
@@ -24,6 +27,7 @@ void Simulator::run() {
         // Render
         _window->clear();
         renderField();
+        renderRobot();
         _window->display();
     }
 }
@@ -31,8 +35,8 @@ void Simulator::run() {
 void Simulator::renderField() {
     for(int r = 0; r < 6; r++) {
         for(int c = 0; c < 6; c++) {
-            sf::RectangleShape square(sf::Vector2f(200, 200));
-            square.setPosition(c * 200, r * 200);
+            sf::RectangleShape square(sf::Vector2f(FIELD_SIZE / 6, FIELD_SIZE / 6));
+            square.setPosition(c * FIELD_SIZE / 6, r * FIELD_SIZE / 6);
 
             if((r + c) % 2 == 0) {
                 square.setFillColor(sf::Color(211, 211, 211));
@@ -46,5 +50,11 @@ void Simulator::renderField() {
 }
 
 void Simulator::renderRobot() {
-    sf::RectangleShape robotShape(sf::Vector2f(_robot->getWidth(), _robot->getLength()));
+    sf::RectangleShape robotShape(sf::Vector2f(ROBOT_WIDTH, ROBOT_LENGTH));
+    robotShape.setOrigin(ROBOT_WIDTH / 2, ROBOT_LENGTH / 2);
+    robotShape.setPosition(_robot.getX(), _robot.getY());
+    robotShape.setRotation(_robot.getTheta() * 180.0f / PI);
+    robotShape.setFillColor(sf::Color::Blue);
+
+    _window->draw(robotShape);
 }
