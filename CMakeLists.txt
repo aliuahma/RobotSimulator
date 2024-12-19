@@ -25,14 +25,14 @@ find_package(SFML REQUIRED COMPONENTS
 # Add executable
 file(GLOB SOURCE_FILES 
     src/*.cpp
-    src/*.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE 
-    ${SFML_INCLUDE_DIR}
+    ${SFML_INCLUDE_DIR} # SFML include directory
+    ${CMAKE_SOURCE_DIR}/include # Add your include directory here
 )
 
 # Link libraries
